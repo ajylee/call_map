@@ -765,7 +765,7 @@ class TargetHighlighter:
             cursor.setPosition(cursor.block().position() + call_pos[1][1])
 
             anchor = cursor.position()
-            cursor.movePosition(QtGui.QTextCursor.NextWord, anchor)
+            cursor.movePosition(QtGui.QTextCursor.NextWord, int=anchor)
 
             self.current_highlight_cursor = cursor
             cursor.orig_format = cursor.charFormat()
