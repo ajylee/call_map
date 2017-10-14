@@ -1068,7 +1068,8 @@ class BookmarksWidget(QtWidgets.QWidget):
     def visitBookmark(self):
         item = self.listWidget.currentItem()
         if item:
-            bookmark = item.data(1)
+            # in PySide2, the CodeElement gets saved as a list.
+            bookmark = list(CodeElement(*elt) for elt in item.data(1))  
             self.map_widget.open_bookmark(bookmark)
 
     def addBookmark(self):
