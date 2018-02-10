@@ -15,6 +15,7 @@ from pygments.lexers import PythonLexer
 from types import ModuleType
 from pathlib import Path
 
+#from . import wheel_fix
 from .core import OrganizerNode as ONode, Node
 from .config import get_user_config
 from .cache import read_text_cached
@@ -765,7 +766,7 @@ class TargetHighlighter:
             cursor.setPosition(cursor.block().position() + call_pos[1][1])
 
             anchor = cursor.position()
-            cursor.movePosition(QtGui.QTextCursor.NextWord, int=anchor)
+            cursor.movePosition(QtGui.QTextCursor.NextWord, anchor)
 
             self.current_highlight_cursor = cursor
             cursor.orig_format = cursor.charFormat()
@@ -1068,8 +1069,7 @@ class BookmarksWidget(QtWidgets.QWidget):
     def visitBookmark(self):
         item = self.listWidget.currentItem()
         if item:
-            # in PySide2, the CodeElement gets saved as a list.
-            bookmark = list(CodeElement(*elt) for elt in item.data(1))  
+            bookmark = item.data(1)
             self.map_widget.open_bookmark(bookmark)
 
     def addBookmark(self):
@@ -1118,7 +1118,18 @@ def make_test_node():
 
 
 class MyQApplication(QtWidgets.QApplication):
-    pass
+
+    def legacy_notify(self, obj: QtCore.QObject, event: QtCore.QEvent):
+        """Fixes scrolling weirdness
+
+        This is a legacy method for `notify` from before PyQt5. It doesn't work
+        with PyQt5.
+
+        """
+        if (event.type() == QtCore.QEvent.Wheel):
+            return wheel_fix.notify_wheel_event(self, obj, event)
+        else:
+            return super().notify(obj, event)
 
 
 class MainWidget(QtWidgets.QSplitter):

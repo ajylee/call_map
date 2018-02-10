@@ -9,12 +9,12 @@ requirements = [
         'jedi==0.10.2',
         'toolz', 'pygments', 'qtconsole']
 
-# If PySide2 was installed using conda, pip will not recognize it
+# If PyQt5 was installed using conda, pip will not recognize it
 # Therefore import it to see if it is installed.
 try:
-    import PySide2
+    import PyQt5
 except ImportError:
-    requirements += ['PySide2']
+    requirements += ['PyQt5']
 
 _package_info = (
     _json.loads(_Path(__file__).parent.joinpath('call_map', 'package_info.json').read_text()))
