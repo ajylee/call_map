@@ -28,17 +28,22 @@ __ https://www.nccgroup.trust/us/about-us/newsroom-and-events/blog/2017/july/cal
 Installation
 =============
 
-Call Map is distributed as a python package for `Python 3.5`. To install with
-`pip3`, run::
+Call Map is distributed as a python package for `Python 3.5`. To install the
+gpl-licensed version with `pip3`, run::
 
-  # From top level directory of call_map
-  pip3 install -e .
+  # From a directory where you want to install call_map
+  git clone -b gpl-licensed https://github.com/ajylee/call_map
+  pip3 install -e call_map
 
 Note that some Python 3 distributions call the package manager `pip`, and some
 call it `pip3`, so you may need substitute `pip3` with `pip`.
 
 The above commands should install the executable `call_map` to the same path
 that the Python interpreter is in.
+
+If you want to install the bsd-licensed version, you will need to install `PySide2`
+yourself. In contrast, the gpl-licensed version depends on `PyQt5`, which `pip` should
+be able download and install automatically.
 
 For details and alternative methods see `INSTALL.rst`.
 

@@ -26,10 +26,15 @@ I have included instructions using `conda`, `apt`, and `brew` if you prefer
 obtaining as many depencencies as possible using those package managers. I also
 include instructions for obtaining `Python 3.5` with `apt` and `brew`.
 
-More details about `PyQt5` specifically can be found at `the Riverbank download
-page`__ (Riverbank is the developer of `PyQt5`).
+Depending on whether you are on the gpl-licensed branch or the bsd-licensed
+branch, `call_map` will depend on `PyQt5` (GPL) or `PySide2` (BSD).  More
+details about `PyQt5` specifically can be found at `the Riverbank download
+page`__ (Riverbank is the developer of `PyQt5`). More details about `PySide2`
+can be found at `the Qt PySide2 Wiki page`. Note that as of February 2018,
+it is much easier to install `PyQt5` than it is to install `PySide2`.
 
 __ https://www.riverbankcomputing.com/software/pyqt/download5
+__ https://wiki.qt.io/PySide2
 
 .. [*] A small part of `call_map` relies on internal structures of `jedi`, which
        may change in future releases. I plan to make `call_map` rely less on
