@@ -1,5 +1,6 @@
 import jedi
 from typing import Tuple
+import logging
 
 
 if tuple(map(int, jedi.__version__.split('.'))) >= (0,10,1):
@@ -34,7 +35,6 @@ def walk_nodes(node: jedi.parser.tree.BaseNode):
 
 def walk_nodes_while_staying_in_scope(node: jedi.parser.tree.BaseNode):
     node = getattr(node, 'base', node)
-
 
     for elt in node.children:
         if isinstance(elt, jedi.parser.tree.BaseNode):
@@ -83,8 +83,13 @@ def vec_add(pos0: Tuple[int, int], pos1: Tuple[int, int]):
 def get_called_functions(node: jedi.parser.tree.BaseNode):
     """Yield AST leaves that represent called functions."""
 
-    _abort = (type(_maybe_getattr_chain(node, 'base', 'var'))
-              is jedi.evaluate.compiled.CompiledObject)
+    _abort = ((type(_maybe_getattr_chain(node, 'base', 'var'))
+               is jedi.evaluate.compiled.CompiledObject))
+
+    if not (hasattr(node, 'children') or _abort):
+        _abort = True
+        logging.getLogger(__name__ + '.get_called_functions').warning(
+            '''Node {} has no children. This shouldn't happen.'''.format(node))
 
     if not _abort:
         for child in walk_nodes_while_staying_in_scope(node):
