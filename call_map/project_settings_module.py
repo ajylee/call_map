@@ -209,16 +209,31 @@ class Project:
             to_delete = [elt for elt in old if elt not in decoded]  # type: List[str]
             to_add = [elt for elt in decoded if elt not in old]     # type: List[str]
 
-            if category == modules:
+            if category in (modules, scripts):
                 stale = []
-                additional, failures = jedi_dump.dump_module_nodes(self.settings[sys_path], to_add)
+                unresolved_stale = []
+                if category == modules:
+                    additional, failures = jedi_dump.dump_module_nodes(self.settings[sys_path], to_add)
+                else:
+                    additional, failures = jedi_dump.dump_script_nodes(self.settings[sys_path], to_add)
 
                 # Execute destructive operations now that we are done with
                 # failure-prone operations
                 self.settings[category] = decoded
 
                 for name in to_delete:
-                    stale_node =  self.module_nodes['python'].pop(name)
+                    try:
+                        stale_node =  self.module_nodes['python'].pop(name)
+                    except KeyError as err:
+                        # KeyError can happen when a change to sys_path leaves
+                        # an unresolvable module or script. I don't remove them
+                        # automatically in case the user changes sys_path again
+                        # to make it a valid module.
+                        unresolved_stale.append(name)
+                        message = 'Removing unresolvable stale module "{}"'.format(err.args[0])
+                        logger.warn(message)
+                        continue
+
                     stale.append(stale_node)
 
                 self.module_nodes['python'].update(additional)
@@ -226,26 +241,7 @@ class Project:
 
                 self.update_usage_search_locations('python')
 
-                return (stale or additional, stale, additional.values())
-
-            elif category == scripts:
-                stale = []
-                additional, failures = jedi_dump.dump_script_nodes(self.settings[sys_path], to_add)
-
-                # Execute destructive operations now that we are done with
-                # failure-prone operations
-                self.settings[category] = decoded
-
-                for name in to_delete:
-                    stale_node =  self.script_nodes['python'].pop(name)
-                    stale.append(stale_node)
-
-                self.script_nodes['python'].update(additional)
-                self.failures['python'][category].update(failures)
-
-                self.update_usage_search_locations('python')
-
-                return (stale or additional, stale, additional.values())
+                return (stale or additional or unresolved_stale, stale, additional.values())
 
             elif category == sys_path:
                 self.settings[sys_path] = decoded
