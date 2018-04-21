@@ -192,6 +192,13 @@ class Project:
 
 
     def set_settings(self, category: str, decoded: Any) -> Tuple[bool, Iterable[Node], Iterable[Node]]:
+        """Returns a tuple containing
+
+        - whether any changes were made
+        - stale nodes
+        - additional nodes
+
+        """
         from . import jedi_dump
 
         type_spec = category_type[category]
@@ -237,7 +244,7 @@ class Project:
                     stale.append(stale_node)
 
                 self.module_nodes['python'].update(additional)
-                self.failures['python'][category].update(failures)
+                self.failures['python'][category] = failures
 
                 self.update_usage_search_locations('python')
 

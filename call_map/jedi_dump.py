@@ -486,7 +486,7 @@ def get_module_node(effective_sys_path: List[Path], module_name: str) -> Tuple[O
     else:
         node = None
         err = ModuleResolutionError(
-            'Could not resolve module {} (did you mean to use "-f"?)'.format(module_name))
+            'Could not resolve module "{}" (did you mean to use "-f"?)'.format(module_name))
 
     return node, err
 
