@@ -1,7 +1,7 @@
 from pathlib import Path
 import json
 import logging
-from typing import List, GenericMeta, Any, Tuple, Optional, Dict, Iterable
+from typing import List, Any, Tuple, Optional, Dict, Iterable
 import toolz as tz
 
 from .core import UserScopeSettings, ScopeSettings, CodeElement, CallPosType, Node
