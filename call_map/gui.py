@@ -1308,7 +1308,7 @@ def make_app(user_scope_settings: UserScopeSettings, project_directory: Optional
     else:
         ui_toplevel.main_window.setWindowTitle('Call Map')
 
-    QtWidgets.qApp.setWindowIcon(QtGui.QIcon(
+    QtWidgets.QApplication.instance().setWindowIcon(QtGui.QIcon(
         str(Path(__file__).parent.joinpath('icons/cruciform-by-andylee.png'))))
 
     original_window_flags = ui_toplevel.main_window.windowFlags()
